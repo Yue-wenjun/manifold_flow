@@ -42,7 +42,11 @@ class SystemRegistry:
 
     def get_system(self, name: str, **kwargs) -> DynamicalSystem:
         if name not in self._systems: raise ValueError(f"Unknown system: {name}")
-        system = self._systems[name].system_class()
+        num_particles = kwargs.pop('num_particles', None)
+        if num_particles is not None:
+            system = self._systems[name].system_class(num_particles=int(num_particles))
+        else:
+            system = self._systems[name].system_class()
         if kwargs: system.update_parameters(kwargs)
         return system
 

@@ -79,6 +79,9 @@ class WebSocketManager:
 
         system_name = config.get('system_id')
         params_override = config.get('parameters', {})
+        num_particles = config.get('num_particles', None)
+        if num_particles is not None:
+            params_override = {**params_override, 'num_particles': int(num_particles)}
 
         try:
             from ..systems.registry import get_system

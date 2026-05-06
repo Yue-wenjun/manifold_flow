@@ -60,6 +60,24 @@
         <div id="parameters-container">
             </div>
 
+        <div class="control-group" style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; margin-top: 15px;">
+            <label style="color: #ffaa00; font-weight: bold;">⚡ Performance</label>
+            <div class="control-group" style="margin-top: 8px;">
+                <label>Particles <span style="font-size:0.75rem; color:#666;">(more = slower)</span></label>
+                <div class="slider-container">
+                    <input type="range" id="num-particles" min="50" max="1000" step="50" value="50">
+                    <span class="param-value" id="val-particles">50</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Compute Steps/Frame <span style="font-size:0.75rem; color:#666;">(more = smoother)</span></label>
+                <div class="slider-container">
+                    <input type="range" id="steps-per-emit" min="2" max="10" step="1" value="2">
+                    <span class="param-value" id="val-steps">2</span>
+                </div>
+            </div>
+        </div>
+
         <div class="render-toggles">
             <label class="toggle-label" style="color: #00ffff;">
                 <input type="checkbox" id="toggle-traj" checked> Show Trajectory History

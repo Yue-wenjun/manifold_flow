@@ -130,6 +130,11 @@ function animate() { requestAnimationFrame(animate); controls.update(); composer
 toggleTraj.addEventListener('change', () => { if(swarmRenderer) swarmRenderer.lines.visible = toggleTraj.checked; });
 togglePart.addEventListener('change', () => { if(swarmRenderer) swarmRenderer.points.visible = togglePart.checked; });
 
+const sliderParticles = document.getElementById('num-particles');
+const sliderSteps = document.getElementById('steps-per-emit');
+sliderParticles.addEventListener('input', () => { document.getElementById('val-particles').innerText = sliderParticles.value; });
+sliderSteps.addEventListener('input', () => { document.getElementById('val-steps').innerText = sliderSteps.value; });
+
 const statusEl = document.getElementById('status-bar');
 const systemSelect = document.getElementById('system-select');
 const btnStart = document.getElementById('btn-start');
@@ -186,7 +191,9 @@ btnStart.addEventListener('click', () => {
     const initialParams = {};
     document.querySelectorAll('input[type="range"]').forEach(s => initialParams[s.dataset.key] = parseFloat(s.value));
 
-    socket.emit('start_stream', { stream_id: streamId, system_id: currentSystemId, time_step: 0.01, steps_per_emit: 5, update_interval: 0.033, parameters: initialParams });
+    const numParticles = parseInt(sliderParticles.value);
+    const stepsPerEmit = parseInt(sliderSteps.value);
+    socket.emit('start_stream', { stream_id: streamId, system_id: currentSystemId, time_step: 0.01, steps_per_emit: stepsPerEmit, update_interval: 0.05, num_particles: numParticles, parameters: initialParams });
     btnStart.style.display = 'none'; btnStop.style.display = 'block'; systemSelect.disabled = true;
 });
 
