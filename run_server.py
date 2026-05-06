@@ -16,7 +16,7 @@ if current_dir not in sys.path:
 from manifold_flow.web.app import run_app
 
 if __name__ == '__main__':
-    HOST = os.environ.get('HOST', '127.0.0.1')
+    HOST = os.environ.get('HOST', '0.0.0.0')
     PORT = int(os.environ.get('PORT', 5000))
     DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 't')
 
