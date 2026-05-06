@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifold Flow v2.0 - Engine Diagnostics</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <style>
+        body { font-family: monospace; background: #1e1e1e; color: #4af626; padding: 30px; line-height: 1.5; }
+        .card { background: #2a2a2a; border: 1px solid #444; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        h3 { color: #fff; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .error { color: #ff5555; }
+        .success { color: #55ff55; }
+    </style>
+</head>
+<body>
+    <h2>Manifold Flow v2.0 - Backend Engine Diagnostics</h2>
+
+    <div class="card">
+        <h3>1. REST API Test (/api/systems)</h3>
+        <pre id="api-log">Fetching system list from backend...</pre>
+    </div>
+
+    <div class="card">
+        <h3>2. WebSocket Real-time Channel Test</h3>
+        <pre id="ws-log">Connecting to Socket.IO...</pre>
+    </div>
+
+    <script>
+        const apiLog = document.getElementById('api-log');
+        fetch('/api/systems')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let logText = `<span class="success">OK: Retrieved ${data.systems.length} dynamical systems</span>\n\n`;
+                    data.systems.forEach(sys => {
+                        logText += `[${sys.category.padEnd(10)}] ${sys.name.padEnd(25)} (dim: ${sys.dimension})\n`;
+                    });
+                    apiLog.innerHTML = logText;
+                } else {
+                    apiLog.innerHTML = `<span class="error">API error: ${data.error}</span>`;
+                }
+            })
+            .catch(error => {
+                apiLog.innerHTML = `<span class="error">Fetch failed. Is Flask running? ${error}</span>`;
+            });
+
+        const wsLog = document.getElementById('ws-log');
+        const socket = io();
+
+        socket.on('connect', () => {
+            wsLog.innerHTML += `\n<span class="success">WebSocket connected (Socket ID: ${socket.id})</span>`;
+        });
+
+        socket.on('status', (data) => {
+            wsLog.innerHTML += `\nServer status: ${data.message}`;
+        });
+
+        socket.on('connect_error', (error) => {
+            wsLog.innerHTML += `\n<span class="error">WebSocket connection failed: ${error}</span>`;
+        });
+
+        socket.on('disconnect', () => {
+            wsLog.innerHTML += `\n<span class="error">WebSocket disconnected.</span>`;
+        });
+    </script>
+</body>
+</html>

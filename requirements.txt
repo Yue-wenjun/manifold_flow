@@ -1,0 +1,6 @@
+numpy
+scipy
+flask
+flask-cors
+flask-socketio
+matplotlib
